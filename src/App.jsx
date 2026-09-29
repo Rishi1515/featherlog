@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Nav from './components/Nav';
 import Gallery from './pages/Gallery';
@@ -17,6 +17,12 @@ export default function App() {
   const [data, setData] = useState(initial.data);
   const [error, setError] = useState(initial.error || '');
   const [progress, setProgress] = useState('');
+  const [engine, setEngine] = useState({ checking: true });
+  useEffect(() => {
+    fetch('/api/health').then(async response => ({ response, body: await response.json() }))
+      .then(({ response, body }) => setEngine({ ...body, ready: response.ok && body.ready, checking: false }))
+      .catch(() => setEngine({ ready: false, checking: false, error: 'Local AI service is not available.' }));
+  }, []);
   async function analyze(next, photo) {
     try {
       const result = await identifyPhoto(photo);
@@ -77,9 +83,12 @@ export default function App() {
   return <>
     <Nav />
     <p style={{ padding: '0 28px' }}>Photos are analyzed by Ollama on this laptop. Species names are checked with GBIF; photos are never sent there. Clear suggestions are grouped automatically; uncertain images stay for review. AI can make mistakes.</p>
+    <div className={`engine ${engine.ready ? 'ready' : 'offline'}`} role="status">
+      <span aria-hidden="true">●</span> {engine.checking ? 'Checking local AI…' : engine.ready ? `AI ready · ${engine.model}` : `AI unavailable · ${engine.error}`}
+    </div>
     {progress && <p role="status" style={{ padding: '0 28px' }}>{progress}</p>}
     {error && <p role="alert" style={{ padding: '12px 28px', color: '#a12b20' }}>{error}</p>}
-    <fieldset disabled={!!progress} style={{ border: 0, padding: 0, margin: 0 }}>
+    <fieldset disabled={!!progress || !engine.ready} style={{ border: 0, padding: 0, margin: 0 }}>
     {data && <div style={{ padding: '0 28px', display: 'flex', gap: 12 }}><button onClick={() => identifyQueue(true)}>Recheck all photos</button><button onClick={exportCollection}>Download collection backup</button></div>}
     {data && <Routes>
       <Route path="/" element={<Gallery birds={data.birds} />} />

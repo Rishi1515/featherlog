@@ -18,7 +18,20 @@ export function validateIdentification(value) {
 }
 let running = false;
 export function visionPlugin() {
-  const install = server => server.middlewares.use('/api/identify', async (req, res) => {
+  const install = server => {
+    server.middlewares.use('/api/health', async (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Cache-Control', 'no-store');
+      if (req.method !== 'GET') { res.statusCode = 405; return res.end(JSON.stringify({ ready: false, error: 'Use GET.' })); }
+      try {
+        const response = await fetch('http://127.0.0.1:11434/api/tags', { signal: AbortSignal.timeout(5000) });
+        if (!response.ok) throw new Error('Ollama unavailable');
+        const tags = await response.json();
+        const ready = tags.models?.some(item => item.name === MODEL || item.model === MODEL);
+        res.end(JSON.stringify({ ready, model: MODEL, error: ready ? null : `${MODEL} is not installed.` }));
+      } catch { res.statusCode = 503; res.end(JSON.stringify({ ready: false, model: MODEL, error: 'Ollama is not running.' })); }
+    });
+    server.middlewares.use('/api/identify', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-store');
     const reply = (status, body) => { res.statusCode = status; res.end(JSON.stringify(body)); };
@@ -54,6 +67,7 @@ export function visionPlugin() {
     } catch (error) {
       reply(503, { error: error.name === 'TimeoutError' ? 'Identification timed out. Try one smaller image at a time.' : error.message === 'fetch failed' ? 'Ollama is not reachable. Start Ollama and retry.' : error.message });
     } finally { running = false; }
-  });
+    });
+  };
   return { name: 'featherlog-local-vision', configureServer(server) { install(server); }, configurePreviewServer(server) { install(server); } };
 }

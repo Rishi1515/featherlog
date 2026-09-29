@@ -129,3 +129,6 @@ a { text-decoration: none; color: inherit; }
 .empty .big { font-family: var(--serif); font-size: 18px; color: var(--ink); margin-bottom: 8px; }
 fieldset > div > button { padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); cursor: pointer; font-size: 14px; }
 fieldset button:disabled { opacity: .55; cursor: wait; }
+.engine { margin: 0 28px 14px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: 999px; font-size: 13px; background: #eee; color: var(--muted); }
+.engine.ready { background: #e4eed9; color: #355126; }
+.engine.offline { background: #f6ded8; color: #8c3025; }

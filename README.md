@@ -9,6 +9,7 @@ Use Node.js 22.12+ and npm. Install Ollama from its official site, run `ollama p
 ## Demo flow
 
 1. Open **No ID yet** and upload a JPEG, PNG, or WebP under 20 MB.
+   Confirm the status near the top says **AI ready · qwen2.5vl:7b** before importing.
 2. Wait for image analysis. Clear model suggestions create species groups automatically, including species outside the starter catalog.
 3. Uncertain, multiple-species or non-bird images remain in the review queue. Click to inspect the suggestion and explanation; accept or assign manually. For existing uploads, use **Identify queued photos**.
 4. Open that species from Gallery, favorite or pin the image, then refresh to check persistence.
