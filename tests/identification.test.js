@@ -13,7 +13,7 @@ test('clear identification creates species, pins image, and removes queue item',
   assert.equal(next.birds[0].photos[0].history[0].decision, 'model-suggestion');
 });
 test('uncertain, non-bird and multi-species images remain in review', () => {
-  for (const change of [{ confidence: 0.5 }, { bird: false }, { multipleSpecies: true }, { taxonomyVerified: false }]) {
+  for (const change of [{ confidence: 0.5 }, { bird: false }, { multipleSpecies: true }, { taxonomyVerified: false }, { reviewRequired: true }]) {
     const next = applyIdentification(data(), photo, { ...result, ...change });
     assert.equal(next.birds.length, 0); assert.equal(next.unidentified.length, 1);
   }

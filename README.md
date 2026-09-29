@@ -27,7 +27,7 @@ Photos are compressed and stored in this browser's localStorage. Compressed imag
 
 ## Not implemented
 
-Google Drive connection/scanning, OAuth, cross-device sync, authentication, archival original storage, maps and bird-call playback are not implemented. Model certainty is self-reported and uncalibrated, not measured accuracy. Automatic grouping uses an 85% model-certainty threshold; inspect results and correct mistakes. This small general vision model is not a validated bird classifier.
+Google Drive connection/scanning, OAuth, cross-device sync, authentication, archival original storage, maps and bird-call playback are not implemented. Model certainty is self-reported and uncalibrated, not measured accuracy. Automatic grouping requires at least 85% model certainty, an exact bird-species taxonomy match, and an image that is not predominantly in deep shadow. This quality heuristic can also flag valid dark-plumaged birds. Inspect results and correct mistakes. This general vision model is not a validated bird classifier.
 
 ## Deployment
 
