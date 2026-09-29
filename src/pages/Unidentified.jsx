@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
 import Photo from "../components/Photo";
 
-export default function Unidentified({ photos, birds, onAssign, onDelete, onUpload }) {
+export default function Unidentified({ photos, birds, onAssign, onDelete, onUpload, onIdentify, onAccept }) {
   const [openId, setOpenId] = useState(null);
   const [choice, setChoice] = useState("");
   const [busy, setBusy] = useState(false);
   const fileRef = useRef(null);
+  const folderRef = useRef(null);
 
   const open = photos.find((p) => p.id === openId);
 
@@ -25,10 +26,13 @@ export default function Unidentified({ photos, birds, onAssign, onDelete, onUplo
     <div className="wrap">
       <div className="section-head" style={{ borderTop: "none" }}>
         <span className="t">Awaiting identification</span>
-        <span className="s">{photos.length} photos · assign a species manually</span>
+        <span className="s">{photos.length} photos · review uncertain identifications</span>
       </div>
 
       <div style={{ padding: "0 28px 8px" }}>
+        <input ref={folderRef} type="file" webkitdirectory="" multiple onChange={handleFiles} style={{ display: 'none' }} aria-label="Import folder" />
+        <button disabled={busy} onClick={() => folderRef.current?.click()}>Import folder</button>
+        <button className="play" disabled={!photos.length} onClick={onIdentify}>Identify queued photos</button>
         <input
           ref={fileRef}
           type="file"
@@ -75,6 +79,14 @@ export default function Unidentified({ photos, birds, onAssign, onDelete, onUplo
             <Photo url={open.url} tone={open.tone} height={160} radius={10} />
             <div style={{ marginTop: 14, fontSize: 13, color: "var(--muted)" }}>{open.note} · {open.date}</div>
             <div style={{ marginTop: 6, fontSize: 12, color: "var(--faint)" }}>{open.cam} · {open.coords}</div>
+            <p>{open.sourceName}</p>
+            {open.identification && <div>
+              <strong>{open.identification.common || 'No species identified'}</strong>
+              <p>{open.identification.reason}</p>
+              {open.identification.taxonomySource && <a href={open.identification.taxonomySource} target="_blank" rel="noreferrer">Species reference · GBIF</a>}
+              <p>{Math.round(open.identification.confidence * 100)}% model certainty (not measured accuracy) · {open.identification.model}</p>
+              {open.identification.bird && open.identification.common && open.identification.scientific && !open.identification.multipleSpecies && <button onClick={() => { if (onAccept(open.id)) setOpenId(null); }}>Accept suggested species</button>}
+            </div>}
             <div style={{ marginTop: 16, fontSize: 13, color: "var(--ink)" }}>Which bird is this?</div>
             <select
               value={choice}

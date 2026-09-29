@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Photo from "../components/Photo";
 
-export default function Species({ birds, onPin, onFav, onDelete }) {
+export default function Species({ birds, onPin, onFav, onDelete, onReview }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const bird = birds.find((b) => b.id === id);
@@ -41,7 +41,7 @@ export default function Species({ birds, onPin, onFav, onDelete }) {
         <div className="hero-info">
           <h1>{bird.common}</h1>
           <div className="sci">{bird.sci}</div>
-          <div className="badge">Manually curated species</div>
+          <div className="badge">{featured?.identification ? 'AI identification · reviewable' : 'Manually curated species'}</div>
           <div className="meta">
             <div><span className="k">Featured photo coordinates</span> · {featured?.coords || 'No GPS data'}</div>
             <div><span className="k">Photos</span> · {bird.photos.length} in this set</div>
@@ -63,6 +63,7 @@ export default function Species({ birds, onPin, onFav, onDelete }) {
               {p.pinned && <span className="pin-tag">📌 Pinned</span>}
             </div>
             <div className="actions">
+              <button onClick={() => onReview(bird.id, p.id)}>Review / correct</button>
               <button
                 className={`ico ${p.pinned ? "pinned" : ""}`}
                 title={p.pinned ? "Pinned (shown on gallery)" : "Pin to gallery"}
@@ -84,6 +85,11 @@ export default function Species({ birds, onPin, onFav, onDelete }) {
               >
                 🗑
               </button>
+            </div>
+            <div style={{ padding: 12, fontSize: 14 }}>
+              <div>{p.sourceName} · {p.date}</div><div>{p.cam} · {p.lens} · {p.exp}</div>
+              {p.identification?.taxonomySource && <a href={p.identification.taxonomySource} target="_blank" rel="noreferrer">Species reference · GBIF</a>}
+              {p.identification && <><p>{p.identification.reason}</p><small>{p.identification.model} · {Math.round(p.identification.confidence * 100)}% model certainty (not measured accuracy)</small></>}
             </div>
           </div>
         ))}

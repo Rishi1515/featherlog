@@ -127,3 +127,5 @@ a { text-decoration: none; color: inherit; }
 
 .empty { padding: 60px 28px; text-align: center; color: var(--muted); }
 .empty .big { font-family: var(--serif); font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+fieldset > div > button { padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); cursor: pointer; font-size: 14px; }
+fieldset button:disabled { opacity: .55; cursor: wait; }

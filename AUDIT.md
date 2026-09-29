@@ -14,7 +14,9 @@ Findings addressed in this demo:
 - GPS values of zero were treated as missing; compression failure could store the full-size original.
 - Firebase project configuration was embedded in source. Firebase web API configuration is not equivalent to an OAuth secret; access control depends on deployed rules, which were not audited. The configuration was removed from this working copy.
 
-Remaining limits: small fixed species catalog, browser storage capacity, no multi-tab synchronization, no cloud sync, no VLM or Drive integration. The existing Desktop original and its generated build still contain their original Firebase configuration; removal here does not revoke or change it.
+Updated identification implementation: local Ollama Qwen2.5-VL analyzes compressed images and returns validated structured species suggestions. Suggestions with model certainty at least 0.85 are grouped automatically; uncertain, non-bird and mixed-species results remain in review. Groups can be created beyond the starter catalog. Model/source, timestamp, reasoning and user decisions are retained. Source-byte fingerprints prevent duplicate new imports.
+
+Remaining limits: browser storage capacity, no multi-tab synchronization, no cloud sync or Drive integration, no archival original storage, no bird calls. Local inference requires Ollama and the downloaded model. Self-reported confidence is not calibrated accuracy. The existing Desktop original and its generated build still contain their original Firebase configuration; removal here does not revoke or change it.
 
 ## Résumé wording supported by this source
 
@@ -22,5 +24,6 @@ Verification of the revised demo: production build and lint passed; three Node s
 
 - Built a React bird-photo organizer prototype with client-side image compression, EXIF metadata extraction, and manual species categorization.
 - Implemented browser-local collection persistence, featured-photo and favorite controls, and visible save-error handling for a credential-free demo.
+- Integrated a local vision-language model for image-based species suggestions, automatic grouping, and reviewable identification history.
 
 Do not claim VLM accuracy, automated Drive scanning, production OAuth deployment, user counts or performance improvements without separate measured evidence. Describe this as freelance/client work only if that engagement description is accurate.

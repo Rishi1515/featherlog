@@ -65,6 +65,9 @@ export async function processPhoto(file) {
   const exp = parts.join(" · ") || "—";
 
   return {
+    sourceName: file.name,
+    sourcePath: file.webkitRelativePath || file.name,
+    fingerprint: Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', await file.arrayBuffer()))).map(b => b.toString(16).padStart(2, '0')).join(''),
     id: `up_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     url: dataUrl,               // real image, shown via <img>
     date: fmtDate(exif.DateTimeOriginal || exif.CreateDate),

@@ -7,7 +7,7 @@ const HEIGHTS = [200, 260, 150, 180, 230, 160, 210, 190];
 
 export default function Gallery({ birds }) {
   const navigate = useNavigate();
-  const [filter, setFilter] = useState("All birds");
+  const [filter, setFilter] = useState("With photos");
   const filters = ["All birds", "With photos"];
 
   const totalPhotos = birds.reduce((n, b) => n + b.photos.length, 0);
@@ -21,7 +21,7 @@ export default function Gallery({ birds }) {
             {f}
           </span>
         ))}
-        <span className="count">{totalPhotos} photos · {birds.length} species</span>
+        <span className="count">{totalPhotos} photos · {birds.filter(b => b.photos.length > 0).length} species photographed</span>
       </div>
 
       <div className="masonry">
