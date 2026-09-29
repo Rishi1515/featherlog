@@ -22,6 +22,8 @@ Remaining limits: browser storage capacity, no multi-tab synchronization, no clo
 
 Verification of the revised demo: production build and lint passed; three Node storage tests passed (round-trip persistence, failed-write preservation, corrupt-data rejection). Production gallery and review routes rendered in the in-app browser. The browser's file chooser timed out, so the complete photo-import/assignment/refresh flow has not been verified interactively. CI is configured to run lint, tests and a production build. A public application deployment has not been verified.
 
+Later local vision verification: seven regression tests pass. The real 3B model identified a public House Sparrow reference image, but produced unreliable names on some user photos and was replaced by 7B. The final 7B app processed seven existing user uploads through the browser UI, automatically grouped two photos, and retained five for review. Grouping and the five-item queue persisted after refresh. This verifies execution and persistence, not a scientific species-accuracy benchmark. Dark images produced incorrect suggestions, motivating the explicit deep-shadow review safeguard. No user images were added to this repository.
+
 - Built a React bird-photo organizer prototype with client-side image compression, EXIF metadata extraction, and manual species categorization.
 - Implemented browser-local collection persistence, featured-photo and favorite controls, and visible save-error handling for a credential-free demo.
 - Integrated a local vision-language model for image-based species suggestions, automatic grouping, and reviewable identification history.
